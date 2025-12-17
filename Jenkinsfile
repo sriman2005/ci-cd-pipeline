@@ -31,7 +31,9 @@ pipeline {
                         docker login -u %DOCKER_USER% -p %DOCKER_PASS%
                         docker build -t %IMAGE_NAME% .
                         docker tag %IMAGE_NAME% %DOCKER_HUB_REPO%:%DOCKER_TAG%
-                        docker push %DOCKER_HUB_REPO%:%DOCKER_TAG%
+                        echo "Docker image built and tagged successfully!"
+                        echo "Skipping push to Docker Hub (uncomment below line when ready)"
+                        REM docker push %DOCKER_HUB_REPO%:%DOCKER_TAG%
                         '''
                     }
                 }
