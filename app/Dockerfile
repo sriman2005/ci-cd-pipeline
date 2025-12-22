@@ -1,5 +1,5 @@
-# Use an official Node.js image
-FROM node:18
+# Use Alpine-based Node.js image for minimal attack surface
+FROM node:18-alpine
 
 # Set working directory inside container
 WORKDIR /app
