@@ -1,0 +1,60 @@
+# Chaos Mesh Pod Failure Experiment
+# This experiment randomly kills a pod to test Kubernetes auto-recovery
+#
+# Prerequisites:
+# 1. Install Chaos Mesh: kubectl apply -f https://mirrors.chaos-mesh.org/v2.6.2/install.yaml
+# 2. Wait for pods: kubectl get pods -n chaos-mesh
+#
+# Usage:
+# kubectl apply -f chaos-experiment.yaml -n ci-cd-app
+# kubectl get podchaos -n ci-cd-app
+# kubectl delete -f chaos-experiment.yaml -n ci-cd-app
+
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: pod-failure-test
+  namespace: ci-cd-app
+  labels:
+    app: chaos-test
+    experiment: pod-failure
+spec:
+  # Action: pod-failure kills selected pods
+  action: pod-failure
+  
+  # Mode: one = randomly selects one pod to kill
+  mode: one
+  
+  # Selector: target pods with app=ci-cd-app label
+  selector:
+    namespaces:
+      - ci-cd-app
+    labelSelectors:
+      app: ci-cd-app
+  
+  # Duration: how long the chaos runs
+  duration: "30s"
+  
+  # Grace period before force kill (seconds)
+  gracePeriod: 0
+
+---
+# Alternative: Pod Kill (immediate termination)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: pod-kill-test
+  namespace: ci-cd-app
+  labels:
+    app: chaos-test
+    experiment: pod-kill
+spec:
+  action: pod-kill
+  mode: one
+  selector:
+    namespaces:
+      - ci-cd-app
+    labelSelectors:
+      app: ci-cd-app
+  duration: "10s"
+  gracePeriod: 0
